@@ -112,8 +112,10 @@ class SnapshotFeatureLookup:
     def load(self) -> None:
         snapshot = read_snapshot(self.snapshot_dir)
         self._stations = {
-            row.station_code: StationInfo(row.station_code, row.station_name, row.weather_point_id)
-            for row in snapshot.stations.itertuples(index=False)
+            str(code): StationInfo(str(code), str(name), str(point))
+            for code, name, point in snapshot.stations[
+                ["station_code", "station_name", "weather_point_id"]
+            ].itertuples(index=False)
         }
         self._snapshot = snapshot
         logger.info("Feature snapshot loaded", extra={"snapshot": snapshot.info})

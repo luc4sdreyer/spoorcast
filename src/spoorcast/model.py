@@ -79,14 +79,13 @@ class SpoorcastModel:
         missing = [c for c in self.feature_columns if c not in df.columns]
         if missing:
             raise ModelInputError(f"Missing model input column(s): {missing}")
-        out = {}
+        out: dict[str, Any] = {}
         for column in self.feature_columns:
             values = df[column]
             if column in self.categories:
-                out[column] = pd.Categorical(
-                    values.astype(object).where(values.notna(), None),
-                    categories=self.categories[column],
-                )
+                categories = self.categories[column]
+                known = values.astype(object).where(values.isin(categories), None)
+                out[column] = pd.Categorical(known, categories=categories)
             else:
                 out[column] = pd.to_numeric(values, errors="coerce").astype("float64")
         return pd.DataFrame(out, index=df.index)
@@ -96,7 +95,7 @@ class SpoorcastModel:
         if df.empty:
             return np.empty(0, dtype="float64")
         proba = self.estimator.predict_proba(self.prepare(df))
-        return np.asarray(proba[:, 1], dtype="float64")
+        return np.asarray(proba, dtype="float64")[:, 1]
 
     @property
     def input_schema(self) -> list[dict[str, str]]:

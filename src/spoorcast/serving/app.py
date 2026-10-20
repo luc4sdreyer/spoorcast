@@ -94,6 +94,7 @@ def create_app(
     app.state.inference_logger = inference_logger or JsonLinesInferenceLogger(
         settings.inference_log_path
     )
+
     @app.middleware("http")
     async def access_log(
         request: Request, call_next: Callable[[Request], Awaitable[Response]]

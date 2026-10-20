@@ -6,10 +6,11 @@ from typing import Any
 from uuid import UUID
 
 from pydantic import AwareDatetime, BaseModel, ConfigDict, Field, field_validator, model_validator
+from pydantic.json_schema import JsonDict
 
 MAX_BATCH_SIZE = 500
 
-_EXAMPLE = {
+_EXAMPLE: JsonDict = {
     "station_code": "UT",
     "scheduled_departure": "2026-08-14T08:12:00+02:00",
     "service_type": "Intercity",

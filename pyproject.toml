@@ -51,7 +51,11 @@ select = ["E", "F", "I", "B", "UP", "SIM", "RUF"]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 addopts = "-ra"
-filterwarnings = ["ignore::DeprecationWarning:lightgbm.*"]
+filterwarnings = [
+    "ignore::DeprecationWarning:lightgbm.*",
+    # Starlette nudges towards httpx2 for its TestClient; httpx works fine.
+    "ignore:Using `httpx` with `starlette.testclient` is deprecated",
+]
 
 [tool.mypy]
 python_version = "3.12"

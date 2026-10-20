@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import uuid
-from collections.abc import Sequence
+from collections.abc import Hashable, Mapping, Sequence
 from datetime import UTC, datetime
 from typing import Any
 
@@ -35,10 +35,10 @@ def requests_to_inputs(
             "service_type": [r.service_type for r in requests],
             "company": [r.company for r in requests],
             "scheduled_departure": pd.to_datetime(
-                [r.scheduled_departure for r in requests], utc=True
+                pd.Series([r.scheduled_departure for r in requests]), utc=True
             ),
             "service_start_time": pd.to_datetime(
-                [r.service_start_time for r in requests], utc=True
+                pd.Series([r.service_start_time for r in requests], dtype=object), utc=True
             ),
             "weather_point_id": [
                 stations[r.station_code].weather_point_id  # type: ignore[union-attr]
@@ -56,9 +56,10 @@ def serving_features(
     return build_features(inputs[INPUT_COLUMNS], weather, aggregates)
 
 
-def _jsonable(row: dict[str, Any]) -> dict[str, Any]:
-    out = {}
+def _jsonable(row: Mapping[Hashable, Any]) -> dict[str, Any]:
+    out: dict[str, Any] = {}
     for key, value in row.items():
+        key = str(key)
         if isinstance(value, float | np.floating) and np.isnan(value):
             out[key] = None
         elif isinstance(value, np.generic):
