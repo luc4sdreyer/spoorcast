@@ -35,7 +35,8 @@ def _print_metrics(metrics: dict[str, float]) -> None:
         prefix: [metrics.get(f"{prefix}_{name}", math.nan) for name in names]
         for prefix in ("model", "baseline")
     }
-    typer.echo(pd.DataFrame(rows, index=names).round(4).to_string())
+    table = pd.DataFrame(rows, index=names)
+    typer.echo(table.to_string(float_format=lambda v: f"{v:.4f}"))
 
 
 @app.command()
