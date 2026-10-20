@@ -122,6 +122,8 @@ def ingest_month(settings: Settings, month: str, stations: pd.DataFrame) -> pd.D
     return departures
 
 
+# MLOPS-SEAM: run this per newly arrived month as a scheduled job; the Parquet partitions
+# map one-to-one onto tables partitioned by year_month.
 def build_dataset(months: Sequence[str], settings: Settings) -> Path:
     """Build dataset partitions for ``months``. Returns the dataset directory."""
     months = sorted(months)

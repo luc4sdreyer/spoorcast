@@ -95,6 +95,7 @@ def train(
     _print_metrics(result.metrics)
     for name, table in result.calibration.items():
         typer.echo(f"\nCalibration ({name}):\n{table.round(4).to_string(index=False)}")
+    # MLOPS-SEAM: log/register the model here instead of (or as well as) saving locally.
     target = result.model.save(output or settings.model_dir)
     typer.echo(f"\nModel {result.model.metadata['model_version']} saved to {target}")
 

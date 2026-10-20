@@ -33,6 +33,8 @@ class ModelInputError(ValueError):
     """Raised when the input frame does not match the model's input schema."""
 
 
+# MLOPS-SEAM: wrap as a pyfunc model (see the module docstring) and register it; the saved
+# directory (model.joblib + metadata.json) is the artifact to log.
 class SpoorcastModel:
     def __init__(
         self,

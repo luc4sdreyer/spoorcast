@@ -86,6 +86,7 @@ def create_app(
         lifespan=lifespan,
     )
     app.state.settings = settings
+    # MLOPS-SEAM: platform-backed implementations of the four protocols are injected here.
     app.state.model_provider = model_provider or LocalModelProvider(settings.model_dir)
     app.state.feature_lookup = feature_lookup or SnapshotFeatureLookup(
         settings.resolved_snapshot_dir

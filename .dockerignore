@@ -1,0 +1,9 @@
+.git
+.venv
+data
+models
+tests
+docs
+scripts
+**/__pycache__
+*.jsonl

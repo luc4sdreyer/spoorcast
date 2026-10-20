@@ -125,6 +125,8 @@ def resolve_window(config: TrainConfig) -> list[str]:
     return months
 
 
+# MLOPS-SEAM: wrap this call in experiment tracking: log result.params, result.metrics,
+# result.calibration, result.training_window and the model with result.input_example.
 def train(config: TrainConfig) -> TrainResult:
     """Train on months ``[t-N, t-1]`` and validate on month ``t`` (no random splits)."""
     train_months = resolve_window(config)

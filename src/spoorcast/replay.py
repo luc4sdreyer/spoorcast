@@ -78,6 +78,8 @@ def replay(
     else:
         info.raise_for_status()
 
+    # MLOPS-SEAM: these labels are the ground truth to join with the inference log
+    # (on prediction_id) for realised-performance and drift monitoring.
     labels_path.parent.mkdir(parents=True, exist_ok=True)
     sent = 0
     first = departures["scheduled_departure"].iloc[0] if len(departures) else None
