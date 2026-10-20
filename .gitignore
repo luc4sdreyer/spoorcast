@@ -218,3 +218,8 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Spoorcast local data and artefacts
+/data/
+/models/
+replay_labels.jsonl
