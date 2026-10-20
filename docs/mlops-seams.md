@@ -9,7 +9,7 @@ monitoring, jobs) plugs in. Each seam is marked in the code with a `# MLOPS-SEAM
 |---|---|---|
 | 1 | `src/spoorcast/training/train.py:128` | Experiment tracking around `train()` |
 | 2 | `src/spoorcast/model.py:36` | pyfunc wrapper + model logging |
-| 3 | `src/spoorcast/cli.py:98` | Model registration after training |
+| 3 | `src/spoorcast/cli.py:99` | Model registration after training |
 | 4 | `src/spoorcast/serving/providers.py:57` | Registry-backed or remote `ModelProvider` |
 | 5 | `src/spoorcast/serving/providers.py:103` | Online feature table `FeatureLookup` |
 | 6 | `src/spoorcast/features/snapshot.py:42` | Feature table writer (offline + online) |
@@ -63,7 +63,7 @@ module docstring has the ~10-line sketch. `input_schema` maps onto a column-base
 
 ## 3. Model registration: `spoorcast train`
 
-`src/spoorcast/cli.py:98`
+`src/spoorcast/cli.py:99`
 
 The CLI saves the trained model to `--output` (default `models/latest`). Plug in: register the
 logged model and set an alias. Champion/challenger logic can start from
