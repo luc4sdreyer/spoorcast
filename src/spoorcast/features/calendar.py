@@ -87,10 +87,16 @@ def is_holiday(local: pd.Series) -> pd.Series:
     return days.isin(pd.to_datetime(sorted(holidays)))
 
 
+def hour_to_bucket(local_hour: pd.Series) -> pd.Series:
+    """Index of the bucket (see :data:`HOUR_BUCKETS`) of each local hour (0-23)."""
+    return pd.Series(
+        _HOUR_TO_BUCKET[local_hour.to_numpy(dtype="int64")], index=local_hour.index, dtype="int64"
+    )
+
+
 def hour_bucket(scheduled_departure: pd.Series) -> pd.Series:
-    """Index of the local-hour bucket (see :data:`HOUR_BUCKETS`) of each departure."""
-    hours = to_local(scheduled_departure).dt.hour.to_numpy()
-    return pd.Series(_HOUR_TO_BUCKET[hours], index=scheduled_departure.index, dtype="int64")
+    """Index of the local-hour bucket of each departure."""
+    return hour_to_bucket(to_local(scheduled_departure).dt.hour)
 
 
 def calendar_features(scheduled_departure: pd.Series) -> pd.DataFrame:

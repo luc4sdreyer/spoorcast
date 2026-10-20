@@ -12,6 +12,7 @@ months incrementally ("a new month arrives") gives the same result as building t
 
 from __future__ import annotations
 
+import json
 import logging
 import shutil
 from collections.abc import Sequence
@@ -45,6 +46,8 @@ ID_COLUMNS = [
 ]
 LABEL_COLUMNS = ["departure_delay_min", "late"]
 DATASET_COLUMNS = [*ID_COLUMNS, *FEATURE_COLUMNS, *LABEL_COLUMNS]
+
+DATASET_INFO_FILE = "_dataset.json"
 
 # Fail the build when more departures than this lack weather (usually: not downloaded).
 MAX_MISSING_WEATHER_FRACTION = 0.05
@@ -151,4 +154,19 @@ def build_dataset(months: Sequence[str], settings: Settings) -> Path:
         logger.info(
             "Dataset %s: %d rows, late rate %.3f", month, len(dataset), dataset["late"].mean()
         )
+    info = {
+        "late_threshold_min": settings.late_threshold_min,
+        "aggregate_window_days": settings.aggregate_window_days,
+        "max_plausible_delay_min": settings.max_plausible_delay_min,
+    }
+    (settings.dataset_dir / DATASET_INFO_FILE).write_text(json.dumps(info, indent=2))
     return settings.dataset_dir
+
+
+def read_dataset_info(dataset_dir: Path) -> dict[str, int]:
+    """Build settings the dataset was created with (label threshold, aggregate window)."""
+    path = dataset_dir / DATASET_INFO_FILE
+    if not path.exists():
+        raise FileNotFoundError(f"{path} not found; run `spoorcast build-dataset`")
+    info: dict[str, int] = json.loads(path.read_text())
+    return info
